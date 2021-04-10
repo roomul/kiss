@@ -81,10 +81,7 @@ run_hook() {
     # their own hook to override this behavior.
     case ${KISS_HOOK:--}$1 in
         -post-build)
-            rm -rf "$3/usr/share/gettext" \
-                   "$3/usr/share/polkit-1" \
-                   "$3/usr/share/locale" \
-                   "$3/usr/share/info"
+            rm -rf "$3/usr/share/info"
         ;;
 
         [!-]*)
@@ -1550,7 +1547,7 @@ args() {
         l|list)     pkg_list "$@" ;;
         u|update)   pkg_updates ;;
         s|search)   for pkg do pkg_find "$pkg" all; done ;;
-        v|version)  printf '5.2.3\n' ;;
+        v|version)  printf '5.2.4\n' ;;
 
         '')
             log 'kiss [a|b|c|d|i|l|r|s|u|v] [pkg]...'
