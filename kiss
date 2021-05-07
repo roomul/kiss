@@ -885,6 +885,8 @@ pkg_conflicts() {
                 log "Before this package can be used as an alternative,"
                 log "this must be fixed in $p_name. Contact the maintainer"
                 die "by finding their details via 'kiss-maintainer'" "" "!>"
+
+            log "$p_name" "Add alternative: $con" 
             }
         done < "$mak_dir/$pid-c"
 
@@ -1454,6 +1456,7 @@ args() {
         [ -z "$1" ] || [ -w "$KISS_ROOT/" ] || [ "$uid" = 0 ] || {
             as_root HOME="$HOME" \
                     XDG_CACHE_HOME="$XDG_CACHE_HOME" \
+                    KISS_CONF="$KISS_CONF" \
                     KISS_PATH="$KISS_PATH" \
                     KISS_FORCE="$KISS_FORCE" \
                     KISS_ROOT="$KISS_ROOT" \
@@ -1538,7 +1541,7 @@ args() {
         l|list)     pkg_list "$@" ;;
         u|update)   pkg_updates ;;
         s|search)   for pkg do pkg_find "$pkg" all; done ;;
-        v|version)  printf '5.2.5\n' ;;
+        v|version)  printf '5.2.6\n' ;;
 
         '')
             log 'kiss [a|b|c|d|i|l|r|s|u|v] [pkg]...'
@@ -1642,6 +1645,13 @@ main() {
 
     # Ensure that the KISS_ROOT doesn't end with a '/'.
     KISS_ROOT=${KISS_ROOT%"${KISS_ROOT##*[!/]}"}
+
+    # Add simple configuration
+    KISS_CONF=${KISS_ROOT}/${KISS_CONF:-etc/kiss.conf}
+    if [ -f "$KISS_CONF" ]; then
+        # load configuration (example: /etc/kiss.conf)
+        . $KISS_CONF
+    fi
 
     # Define some paths which we will then use throughout the script.
     sys_db=$KISS_ROOT/${pkg_db:=var/db/kiss/installed}
